@@ -1,7 +1,7 @@
 # apidocs
 REST API docs for https://api.token.store
 
-### `/ticker`
+### `/public/v1/ticker`
 Returns 24h trade volume and the last price for each coin.
 
 #### Sample output:
@@ -19,7 +19,7 @@ Returns 24h trade volume and the last price for each coin.
 }
 ```
 
-### `/public/trades`
+### `/public/v1/trades`
 Historical trades
 Return historical trades executed. Trades returned in ascending order. Option available to query historical trades based on tradeID, default is
 to return latest 100 trades
@@ -35,7 +35,7 @@ to return latest 100 trades
 
 #### Sample input: 
 
-`GET /public/trades?pair=ETH_EOS&limit=20&fromId=123` 
+`GET /public/v1/trades?pair=ETH_EOS&limit=20&fromId=123` 
 
 #### Sample output:
 ```
@@ -63,9 +63,9 @@ to return latest 100 trades
 ]
 ```
 
-### `/public/products`
+### `/public/v1/pairs`
 
-Get list of products
+Get list of pairs
 
 #### Sample output
 
@@ -84,7 +84,7 @@ Get list of products
 ]
 ```
 
-### `/public/orderbook?pair=:pair`
+### `/public/v1/orderbook?pair=:pair`
 
 Orderbook for pair. Returns price->volume pairs.
 
@@ -97,7 +97,7 @@ Orderbook for pair. Returns price->volume pairs.
 
 #### Sample input: 
 
-`GET /public/orderbook?pair=ETH_EOS&depth=10` 
+`GET /public/v1/orderbook?pair=ETH_EOS&depth=10` 
 
 #### Sample output
 
