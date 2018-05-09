@@ -1,0 +1,432 @@
+#%RAML 1.0
+title: REST API doc for token.store
+mediaType: application/json
+baseUri: https://v1.api.token.store
+
+types:
+  Address:
+    type: string
+    pattern: /^(0x)?[0-9a-f]{40}$/
+/ticker:
+  get:
+    description: Returns 24h trade volume and the last price for each coin.
+    responses:
+      200:
+        body:
+          example: |
+            {
+              "ETH_TTT":{
+                "tokenAddr":"0xf3bc4a5abbb9ffa56c84d27f167e7257c64bd0b2",
+                "quoteVolume":18,
+                "baseVolume":6.050000000000001,
+                "last":0.15,
+                "bid":0.3,
+                "ask":0.15,
+                "percentChange":-90.54688681639148
+              }
+            }
+/trades:
+  get:
+    description: Historical trades Return historical trades executed. Trades returned in ascending order. Option available to query historical trades based on tradeID, default is to return latest 100 trades
+    queryParameters:
+      pair:
+        type: string
+        description:
+        example: ETH_EOS
+      fromId:
+        type: number
+        description: query by tradeID, display trades after this ID inclusive (optional, default to return latest trades)
+      limit:
+        type: number
+        description: number of trades returned (optional, default to 100)
+        default: 100
+        example: 100
+    responses:
+      200:
+        body:
+          example: |
+            [
+             {
+                "id":123,
+                "timestamp":1520797156,
+                "createdAt":"2018-03-11T19:39:16.967Z",
+                "baseAmount":0.01,
+                "price":2,
+                "type":"sell",
+                "tokenGetSymbol":"ETH",
+                "tokenGiveSymbol":"EOS",
+                "transactionHash": "0x000191902d6952650606530676dedfef962c3ac5be55876577f286b9d1a77805"
+             },
+             {
+                "id":124,
+                "timestamp":1520797166,
+                "createdAt":"2018-03-11T19:39:26.011Z",
+                "baseAmount":0.01,
+                "price":2,
+                "type":"sell",
+                "tokenGetSymbol":"ETH",
+                "tokenGiveSymbol":"EOS",
+                "transactionHash": "0x000191902d6952650606530676dedfef962c3ac5be55876577f286b9d1a77805"
+             }
+            ]
+  post:
+    description: Create trade for the order with number orderId from payload.
+    body:
+      example: |
+        {
+          orderId: 1235,
+          amount: 1000000000000000000,
+          tx: {
+            nonce: 18,
+            gasPrice: 1000000000,
+            gasLimit: 250000
+          },
+          signature: {
+            r: '7542baa842d9d1ed7a49cc8b93ac7a94a84802bb47f778e1bebb302cc73f9553',
+            s: '39137b296c3143b8d2418bb72fd76dc5f7ecc717b88ac3ef1b823b14d81cc856',
+            v: 27
+          }
+        }
+    responses:
+      201:
+        body:
+          example: |
+            {
+              "transactionHash": "0x4e3fe115182219ac5d787bcb8d616bd29b73e19e6afc15def1ac999383d3642c",
+            }
+  /{id}:
+    get:
+      description: Provide infomation for single trade.
+      responses:
+        200:
+          body:
+            example: |
+              {
+                "id":123,
+                "timestamp":1520797156,
+                "createdAt":"2018-03-11T19:39:16.967Z",
+                "baseAmount":0.01,
+                "price":2,
+                "type":"sell",
+                "tokenGetSymbol":"ETH",
+                "tokenGiveSymbol":"EOS",
+                "transactionHash": "0x000191902d6952650606530676dedfef962c3ac5be55876577f286b9d1a77805"
+              }
+/pairs:
+  get:
+    description: Get list of pairs
+    responses:
+      200:
+        body:
+          example: |
+            [
+             {
+                "id":"ETH_EGR",
+                "fromSymbol":"ETH",
+                "toSymbol":"EGR"
+             },
+             {
+                "id":"ETH_BAS",
+                "fromSymbol":"ETH",
+                "toSymbol":"BAS"
+             }
+            ]
+/orderbook:
+  get:
+    description: Orderbook for pair. Returns price->volume pairs.
+    queryParameters:
+      pair:
+        type: string
+        example: ETH_EOS
+      depth:
+        type: number
+        description: number of orders returned per type (asks/bids) (optional, default to 100)
+        required: false
+        default: 100
+    responses:
+      200:
+        body:
+          example: |
+            {
+              "bids": [[0.0028555, 22], [0.0028, 4]],
+              "asks": [[0.345, 0.345], [0.35, 1.20085]]
+            }
+/config:
+  get:
+    description: Return config including fee, minOrderSize, blockNumber
+    responses:
+      200:
+        body:
+          example: |
+            {
+              "fee": 0.003,
+              "minOrderSize": 0.01,
+              "blockNumber": 5576594,
+              "recommendedGasPrice": 2000000000,
+              "recommendedGasLimit": 250000
+            }
+/contract:
+  get:
+    description: Return contract abis and address.
+    responses:
+      200:
+        body:
+          example: |
+            {
+              "contract": {
+                "address": "0x1cE7AE555139c5EF5A57CC8d814a867ee6Ee33D8",
+                "abi": [{
+                  "constant": false,
+                  "inputs": [
+
+                  ],
+                  "name": "deposit",
+                  "outputs": [
+
+                  ],
+                  "payable": true,
+                  "stateMutability": "payable",
+                  "type": "function"
+                }]
+              }
+            }
+/orders:
+  get:
+    description: Provide all active orders ordered by created time.
+    queryParameters:
+      limit:
+        type: number
+        minimum: 1
+        maximum: 100
+        default: 100
+      fromId:
+        type: number
+        description: query by orderId, display orders after this ID inclusive (optional, default to return latest orders)
+        required: false
+      account:
+        type: Address
+      tokenAddress:
+        type: Address
+    responses:
+      200:
+        body:
+          example: |
+              [{
+                "id": "3135123",
+                "account": "0x1307b8d863e0cfc147ad0953613f98bbdf95be41",
+                "contract": "0x1cE7AE555139c5EF5A57CC8d814a867ee6Ee33D8",
+                "tokenGet": "0x0000000000000000000000000000000000000000",
+                "tokenGetSymbol": "ETH",
+                "tokenGetDecimals": 18,
+                "amountGet": "747000000000000000",
+                "tokenGive": "0x62a56a4a2ef4d355d34d10fbf837e747504d38d4",
+                "tokenGiveSymbol": "PAYX",
+                "tokenGiveDecimals": 2,
+                "amountGive": "30000",
+                "nonce": "1982976399",
+                "expires": 5629999,
+                "signature": {
+                  "r": "0xfd7aa97d7bdf41ee188ab6db5ce6fcbd312e9f8d1932df9b446820a5a7f6ff4a",
+                  "s": "0x37eab8f9e95629f4ede94ed7e38d14f8fbd6bde6fcc19d24dc2aaea21bd5eaa1",
+                  "v": 28
+                },
+                "availableVolume": "747000000000000000",
+                "created_at": "2018-05-08T21:30:17.399Z",
+                "updated_at": "2018-05-08T21:30:17.399Z"
+              }]
+  post:
+    description: Create new order
+    body:
+      example: |
+        {
+          "account": "0x1307b8d863e0cfc147ad0953613f98bbdf95be41",
+          "tokenGet": "0x0000000000000000000000000000000000000000",
+          "amountGet": "747000000000000000",
+          "tokenGive": "0x62a56a4a2ef4d355d34d10fbf837e747504d38d4",
+          "amountGive": "30000",
+          "nonce": "1982976399",
+          "expires": 5629999,
+          "signature": {
+            "r": "0xfd7aa97d7bdf41ee188ab6db5ce6fcbd312e9f8d1932df9b446820a5a7f6ff4a",
+            "s": "0x37eab8f9e95629f4ede94ed7e38d14f8fbd6bde6fcc19d24dc2aaea21bd5eaa1",
+            "v": 28
+          }
+        }
+    responses:
+      200:
+        body:
+          example: |
+            {
+              "id": "3135123",
+              "account": "0x1307b8d863e0cfc147ad0953613f98bbdf95be41",
+              "contract": "0x1cE7AE555139c5EF5A57CC8d814a867ee6Ee33D8",
+              "tokenGet": "0x0000000000000000000000000000000000000000",
+              "tokenGetSymbol": "ETH",
+              "tokenGetDecimals": 18,
+              "amountGet": "747000000000000000",
+              "tokenGive": "0x62a56a4a2ef4d355d34d10fbf837e747504d38d4",
+              "tokenGiveSymbol": "PAYX",
+              "tokenGiveDecimals": 2,
+              "amountGive": "30000",
+              "nonce": "1982976399",
+              "expires": 5629999,
+              "signature": {
+                "r": "0xfd7aa97d7bdf41ee188ab6db5ce6fcbd312e9f8d1932df9b446820a5a7f6ff4a",
+                "s": "0x37eab8f9e95629f4ede94ed7e38d14f8fbd6bde6fcc19d24dc2aaea21bd5eaa1",
+                "v": 28
+              },
+              "availableVolume": "747000000000000000",
+              "created_at": "2018-05-08T21:30:17.399Z",
+              "updated_at": "2018-05-08T21:30:17.399Z"
+            }
+  /{id}:
+    get:
+      description: Provide infomation for single order including not active order.
+      responses:
+        200:
+          body:
+            example: |
+                {
+                  "id": "3135123",
+                  "account": "0x1307b8d863e0cfc147ad0953613f98bbdf95be41",
+                  "contract": "0x1cE7AE555139c5EF5A57CC8d814a867ee6Ee33D8",
+                  "tokenGet": "0x0000000000000000000000000000000000000000",
+                  "tokenGetSymbol": "ETH",
+                  "tokenGetDecimals": 18,
+                  "amountGet": "747000000000000000",
+                  "tokenGive": "0x62a56a4a2ef4d355d34d10fbf837e747504d38d4",
+                  "tokenGiveSymbol": "PAYX",
+                  "tokenGiveDecimals": 2,
+                  "amountGive": "30000",
+                  "nonce": "1982976399",
+                  "expires": 5629999,
+                  "signature": {
+                    "r": "0xfd7aa97d7bdf41ee188ab6db5ce6fcbd312e9f8d1932df9b446820a5a7f6ff4a",
+                    "s": "0x37eab8f9e95629f4ede94ed7e38d14f8fbd6bde6fcc19d24dc2aaea21bd5eaa1",
+                    "v": 28
+                  },
+                  "availableVolume": "747000000000000000",
+                  "created_at": "2018-05-08T21:30:17.399Z",
+                  "updated_at": "2018-05-08T21:30:17.399Z"
+                }
+    /cancel:
+      post:
+        description: Used for send cancel order transaction
+        body:
+          example: |
+              {
+                tx: {
+                  nonce: 18,
+                  gasPrice: 1000000000,
+                  gasLimit: 250000
+                },
+                signature: {
+                  r: '7542baa842d9d1ed7a49cc8b93ac7a94a84802bb47f778e1bebb302cc73f9553',
+                  s: '39137b296c3143b8d2418bb72fd76dc5f7ecc717b88ac3ef1b823b14d81cc856',
+                  v: 27
+                }
+              }
+        responses:
+          201:
+            body:
+              example: |
+                {
+                  "transactionHash": "0x4e3fe115182219ac5d787bcb8d616bd29b73e19e6afc15def1ac999383d3642c",
+                }
+/accounts/{account}:
+  uriParameters:
+    account:
+      type: Address
+      description: Your ethereum address
+  get:
+    description: Provide information required for making solidity function request for specific address. Right now it has only nonce
+    responses:
+      200:
+        body:
+          example: |
+            {
+              "nonce": 19
+            }
+  /balances:
+    get:
+      description: Return balance for provided tokens.
+      queryParameters:
+        tokenAddresses:
+          type: array
+          items: Address
+        tokenSymbols:
+          type: array
+          items: string
+      responses:
+        200:
+          body:
+            example: |
+              [
+                {
+                  "name": "Ethereum",
+                  "symbol": "ETH",
+                  "addr": "0x0000000000000000000000000000000000000000",
+                  "listed": true,
+                  "decimals": 18,
+                  "balances": {
+                    "wallet": "1489398500000000",
+                    "exchange": {
+                      "total": "295796265000000000",
+                      "reserved": "60000000000000000",
+                      "available": "235796265000000000"
+                    }
+                  }
+                }
+              ]
+  /deposit:
+    post:
+      description: deposit Ethereum or a token to smart contract via API
+      body:
+        example: |
+          {
+            tx: {
+              nonce: 18,
+              gasPrice: 1000000000,
+              gasLimit: 250000
+            },
+            signature: {
+              r: '2794e15eafe6e0a115db96f6746239f878d45face4e942ea5a797e4479008d8b',
+              s: '43081cc7453b19ed773c812ff2a472ecb2bc15ec658fe05dca9c85a1b82e5a7d',
+              v: 28
+            },
+            amount: 1000000000000000000,
+            address: '0x0000000000000000000000000000000000000000'
+          }
+      responses:
+        201:
+          body:
+            example: |
+              {
+                "transactionHash": "0x4e3fe115182219ac5d787bcb8d616bd29b73e19e6afc15def1ac999383d3642c"
+              }
+  /withdraw:
+    post:
+      description: withdraw Ethereum or a token from smart contract via API
+      body:
+        example: |
+          {
+            tx: {
+              nonce: 18,
+              gasPrice: 1000000000,
+              gasLimit: 250000
+            },
+            signature: {
+              r: '39fc316bbf4e326faa8cfcf4fd7a013476297684a45d5ea3abf82d35a1079131',
+              s: '7414755d340ed7493878ec0846e972b28447121f51e14fdf0a9d419099d5144c',
+              v: 28
+            },
+            amount: 1000000000000000000,
+            address: '0x0000000000000000000000000000000000000000'
+          }
+      responses:
+        201:
+          body:
+            example: |
+              {
+                "transactionHash": "0x4e3fe115182219ac5d787bcb8d616bd29b73e19e6afc15def1ac999383d3642c"
+              }
