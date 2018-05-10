@@ -76,6 +76,7 @@ types:
         {
           orderId: 1235,
           amount: 1000000000000000000,
+          account: '0x40f79bc96abe0d3b92d8c2e71f17e898815d742d',
           tx: {
             nonce: 18,
             gasPrice: 1000000000,
@@ -240,6 +241,7 @@ types:
       example: |
         {
           "account": "0x1307b8d863e0cfc147ad0953613f98bbdf95be41",
+          "contract": '0x1cE7AE555139c5EF5A57CC8d814a867ee6Ee33D8',
           "tokenGet": "0x0000000000000000000000000000000000000000",
           "amountGet": "747000000000000000",
           "tokenGive": "0x62a56a4a2ef4d355d34d10fbf837e747504d38d4",
@@ -395,7 +397,7 @@ types:
               v: 28
             },
             amount: 1000000000000000000,
-            address: '0x0000000000000000000000000000000000000000'
+            tokenAddress: '0x0000000000000000000000000000000000000000'
           }
       responses:
         201:
@@ -421,7 +423,7 @@ types:
               v: 28
             },
             amount: 1000000000000000000,
-            address: '0x0000000000000000000000000000000000000000'
+            tokenAddress: '0x0000000000000000000000000000000000000000'
           }
       responses:
         201:
