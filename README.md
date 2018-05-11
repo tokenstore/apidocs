@@ -1,106 +1,60 @@
-# apidocs
-REST API docs for https://api.token.store
+# <img src="https://avatars2.githubusercontent.com/u/29560114?s=24&v=4"> TOKEN STORE PUBLIC  API
 
-### `/public/v1/ticker`
-Returns 24h trade volume and the last price for each coin.
+[![specification](https://img.shields.io/badge/raml-1.0-blue.svg)](https://github.com/raml-org/raml-spec/blob/master/versions/raml-10/raml-10.md/)
+[![Join the group on Telegram](https://img.shields.io/badge/telegram-@thetokenstore-32a2da.svg)](https://telegram.me/thetokenstore)
 
-#### Sample output:
-```
-{
-  "ETH_TTT":{
-    "tokenAddr":"0xf3bc4a5abbb9ffa56c84d27f167e7257c64bd0b2",
-    "quoteVolume":18,
-    "baseVolume":6.050000000000001,
-    "last":0.15,
-    "bid":0.3,
-    "ask":0.15,
-    "percentChange":-90.54688681639148
-  }
-}
-```
 
-### `/public/v1/trades`
-Historical trades
-Return historical trades executed. Trades returned in ascending order. Option available to query historical trades based on tradeID, default is
-to return latest 100 trades
+### What is [token.store](https://token.store):
 
-#### Params
+- Token Store is a decentralized exchange built on smart contracts that offers trading in mostly ERC-20 tokens against Ethereum.
+- We don't have fiat currencies and do not provide any leveraged trading.
+- We have 0.3% fee for takers and fee-free for makers.
+- Our [solidity contract ](https://github.com/tokenstore/contract) publiched at [0x1cE7AE555139c5EF5A57CC8d814a867ee6Ee33D8](https://etherscan.io/address/0x1ce7ae555139c5ef5a57cc8d814a867ee6ee33d8#code).
+- You can tride token by symbol or address.
 
-|Name        | Type                 | Example                                             | Description
-|------------|----------------------|-----------------------------------------------------|----------------------------
-|pair        | String               | ETH_EOS                                             | 
-|fromId      | Number               | 123                                                 | query by tradeID, display trades after this ID inclusive (optional, default to return latest trades)
-|limit       | Integer              | 200                                                 | number of trades returned (optional, default to 100)
-|order       | String (asc or desc) | desc                                                | order which items returned in (default to desc)
+### REST API
 
-#### Sample input: 
+Base URL is [https://v1.api.token.store](https://v1.api.token.store) At this endpoint we have [documentation](https://v1.api.token.store) generated from  [api.raml](api.raml)
 
-`GET /public/v1/trades?pair=ETH_EOS&limit=20&fromId=123` 
+We use raml 1.0 for specification. You can used it for auto generation documentation/client/mocks/etc. More about this format you can read at [raml.org](https://raml.org/)
 
-#### Sample output:
-```
-[
-   {
-      "id":123,
-      "timestamp":1520797156,
-      "createdAt":"2018-03-11T19:39:16.967Z",
-      "baseAmount":0.01,
-      "price":2,
-      "type":"sell",
-      "tokenGet":"ETH",
-      "tokenGive":"EOS"
-   },
-   {
-      "id":123,
-      "timestamp":1520797166,
-      "createdAt":"2018-03-11T19:39:26.011Z",
-      "baseAmount":0.01,
-      "price":2,
-      "type":"sell",
-      "tokenGet":"ETH",
-      "tokenGive":"EOS"
-   }
-]
-```
+### Example of usage
 
-### `/public/v1/pairs`
+- Example for [node.js](bots-example/js/)
 
-Get list of pairs
+### Tools
 
-#### Sample output
+- [order signer](https://www.npmjs.com/package/@token.store/ethjs-order-signer)
+- [ethereumjs-util](https://www.npmjs.com/package/ethereumjs-util)
 
-```
-[  
-   {  
-      "id":"ETH_EGR",
-      "fromSymbol":"ETH",
-      "toSymbol":"EGR"
-   },
-   {  
-      "id":"ETH_BAS",
-      "fromSymbol":"ETH",
-      "toSymbol":"BAS"
-   }
-]
-```
+## FAQ
 
-### `/public/v1/orderbook?pair=:pair`
+#### Your API sends me answer 400 code. Could you help me?
 
-Orderbook for pair. Returns price->volume pairs.
+This error shows that you have wrong payload. Advises:
 
-#### Params
+1. Check payload example in our specification.
+2. Use right function from contact to generate the message for signing.
+3. Be free, open issue with code example, but do not provide your public key.
 
-|Name        | Type         | Example                                             | Description
-|------------|--------------|-----------------------------------------------------|----------------------------
-|pair        | String       | ETH_EOS (required)                                           | 
-|depth       | Integer      | 10                                                  | number of orders returned per type (asks/bids) (optional, default to 100)
+#### Your API sends me answer 502 code. Could you help me?
 
-#### Sample input: 
+This error shows that your transaction doesn't approved by our Ethereum node. Advises:
 
-`GET /public/v1/orderbook?pair=ETH_EOS&depth=10` 
+1. Check message. Usually it has all required information.
+2. Check your account balance. Do you have enough Ethereum for gas payment?
+3. Check your nonce. You can use our endpoint `/accounts/{account}` for reciving recomended nonce for your account.
 
-#### Sample output
+#### My transaction is processed too long. Could you help me?
 
-```
-{"bids":[[0.5,400],[0.45,100], ...],"asks":[[0.9,120],[0.85,190]]}
-```
+Nope. Every transaction is processed on Ethereum blockchain. Please, use more gas.
+
+#### Do you have different protocols like WebSockets, JSON-RPC, GraphQL?
+
+Please be free open feature request as issue to this repository.
+
+#### Could I have support?
+
+If you have develop request, then, please, open issue.
+
+If you need help with the product, then our [telegram chanel](https://telegram.me/thetokenstore) is the best place for that.
