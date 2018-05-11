@@ -96,6 +96,10 @@ types:
               "transactionHash": "0x4e3fe115182219ac5d787bcb8d616bd29b73e19e6afc15def1ac999383d3642c",
             }
   /{id}:
+    uriParameters:
+      id:
+        type: number
+        description: Order id
     get:
       description: Provide infomation for single trade.
       responses:
@@ -132,25 +136,35 @@ types:
                 "toSymbol":"BAS"
              }
             ]
-/orderbook:
+/orderbook/{pair}:
+  uriParameters:
+    pair:
+      type: string
+      example: ETH_EOS
+      description: Pair for orderbook
   get:
     description: Orderbook for pair. Returns price->volume pairs.
     queryParameters:
-      pair:
-        type: string
-        example: ETH_EOS
-      depth:
+      limit:
         type: number
-        description: number of orders returned per type (asks/bids) (optional, default to 100)
+        description: maximum number of orders returned per type (asks/bids) (optional, default to 100)
         required: false
+        minimum: 1
+        maximum: 500
         default: 100
     responses:
       200:
         body:
           example: |
             {
-              "bids": [[0.0028555, 22], [0.0028, 4]],
-              "asks": [[0.345, 0.345], [0.35, 1.20085]]
+              "bids": [
+                { price: 0.0028555, volume: 22 },
+                { price: 0.0028, volume: 4 }
+              ],
+              "asks": [
+                { price: 0.345, volume: 0.345 },
+                { price: 0.35, volume: 1.20085 }
+              ]
             }
 /config:
   get:
@@ -282,6 +296,10 @@ types:
               "updated_at": "2018-05-08T21:30:17.399Z"
             }
   /{id}:
+    uriParameters:
+      id:
+        type: number
+        description: Order id
     get:
       description: Provide infomation for single order including not active order.
       responses:
