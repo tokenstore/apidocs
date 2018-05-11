@@ -70,7 +70,7 @@ types:
              }
             ]
   post:
-    description: Create trade for the order with number orderId from payload.
+    description: Create trade for the order with number orderId from payload. Function 'trade' from our contract should be used generating the signature.
     body:
       example: |
         {
@@ -313,7 +313,7 @@ types:
                 }
     /cancel:
       post:
-        description: Used for send cancel order transaction
+        description: Used for send cancel order transaction. Function 'cancelOrder' from our contract should be used generating the signature.
         body:
           example: |
               {
@@ -382,7 +382,7 @@ types:
               ]
   /deposit:
     post:
-      description: deposit Ethereum or a token to smart contract via API
+      description: deposit Ethereum or a token to smart contract via API. Function 'deposit' or 'depositToken' from our contract should be used generating the signature.
       body:
         example: |
           {
@@ -408,7 +408,7 @@ types:
               }
   /withdraw:
     post:
-      description: withdraw Ethereum or a token from smart contract via API
+      description: withdraw Ethereum or a token from smart contract via API. Function 'withdraw' or 'withdrawToken' from our contract should be used generating the signature.
       body:
         example: |
           {
