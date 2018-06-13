@@ -13,7 +13,7 @@
 
 ### REST API
 
-The Base URL is [https://v1.api.token.store](https://v1.api.token.store). At this endpoint we have [documentation](https://v1.api.token.store) generated from  [api.raml](api.raml)
+The Base URL is [https://v1-v.api.token.store](https://v1-1.api.token.store). At this endpoint we have [documentation](https://v1-1.api.token.store) generated from  [api-v1-1.raml](api-v1-1.raml)
 
 We use RAML 1.0 for specification. You can use it to automatically generate documentation/client/mocks/etc. You can read more about RAML at [raml.org](https://raml.org/)
 
@@ -56,4 +56,4 @@ Not yet -- but please feel free to open a feature request here!
 
 If you have developer request, then please open an issue here.
 
-If you need help with the product, then our [telegram chanel](https://telegram.me/thetokenstore) is the best place for that. You can also email support@token.store for complex queries. 
+If you need help with the product, then our [telegram chanel](https://telegram.me/thetokenstore) is the best place for that. You can also email support@token.store for complex queries.
