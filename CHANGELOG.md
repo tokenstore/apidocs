@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to The Token Store's API will be documented here.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * `https://v1.api.token.store`. Please use `https://v1-1.api.token.store`
 ### Changed
 * `https://v1.api.token.store` => `https://v1-1.api.token.store`
-* GET `https://v1-1.api.token.store/orderbook?pair=<pair>` => GET `https://v1-1.api.token.store/orderbook/{pair}`. Now, pair can has *ETH* in any place. For example, *ETH_EVN* and *EVN_ETH* are valid pairs.
+* GET `https://v1-1.api.token.store/orderbook?pair=<pair>` => GET `https://v1-1.api.token.store/orderbook/{pair}`. Now, pair can have *ETH* both before and after the token symbol. For example, *ETH_EVN* and *EVN_ETH* are valid pairs.
 * GET `https://v1-1.api.token.store/orderbook/{pair}` payload changed
 from
 ```
@@ -33,8 +33,8 @@ to
 }
 ```
 ### Fixed
-* GET `https://v1-1.api.token.store/api/trades` and GET `https://v1.api.token.store/api/trades/{id}` - has right *type* for trade. Before it was wrong.
-* GET `https://v1-1.api.token.store/orderbook/{pair}` - return *volume* in tokens units for bids and asks. Before it was tokens unit for bids and Ethereum unit for asks.
+* GET `https://v1-1.api.token.store/api/trades` and GET `https://v1.api.token.store/api/trades/{id}` - has the corrected *type* for trades. Before it was wrong.
+* GET `https://v1-1.api.token.store/orderbook/{pair}` - returns *volume* in tokens units for bids and asks. Before it was tokens unit for bids and Ethereum unit for asks.
 
 ## [1.0.0] - 2018-05-11
 ### Deprecated
@@ -50,7 +50,7 @@ to
 * GET `https://v1.api.token.store/contract` - Return contract abis and address
 * GET `https://v1.api.token.store/orders` - Provide all active orders ordered by created time
 * POST `https://v1.api.token.store/orders` - Create new order
-* GET `https://v1.api.token.store/orders/{id}` - Provide infomation for single order including not active order
+* GET `https://v1.api.token.store/orders/{id}` - Provide infomation for single order including not an order that is not active
 * POST `https://v1.api.token.store/orders/{id}/cancel` - Used for send cancel order transaction. Function *cancelOrder* from our contract should be used generating the signature.
 * POST `https://v1.api.token.store/api/trades` - Create trade for the order with number orderId from payload. Function *trade* from our contract should be used generating the signature.
 * GET `https://v1.api.token.store/api/trades/{id}` - Provide infomation for single trade
