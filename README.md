@@ -13,7 +13,7 @@
 
 ### REST API
 
-The Base URL is [https://v1-v.api.token.store](https://v1-1.api.token.store). At this endpoint we have [documentation](https://v1-1.api.token.store) generated from  [api-v1-1.raml](api-v1-1.raml)
+The Base URL is [https://v1-1.api.token.store](https://v1-1.api.token.store). At this endpoint we have [documentation](https://docs.api.token.store) generated from  [api-v1-1.raml](api-v1-1.raml)
 
 We use RAML 1.0 for specification. You can use it to automatically generate documentation/client/mocks/etc. You can read more about RAML at [raml.org](https://raml.org/)
 
